@@ -1,8 +1,10 @@
 import boto3
 
 class Queue:
-    def __init__(self, queue_name):
-        sqs = boto3.resource('sqs', region_name='eu-west-1')
+    def __init__(self, queue_name, session=None):
+        if session == None:
+            session = boto3.session.Session()
+        sqs = session.resource('sqs', region_name='eu-west-1')
         self.queue = sqs.get_queue_by_name(QueueName=queue_name)
 
     def receive_message(self):
