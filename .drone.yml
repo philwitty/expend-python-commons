@@ -1,0 +1,3 @@
+image: docker-registry.expend.io:5000/build_api:latest
+script:
+    - scripts/build.sh
