@@ -1,3 +1,4 @@
-image: docker-registry.expend.io:5000/build_api:latest
-script:
-    - scripts/build.sh
+build:
+  image: docker-registry.expend.io/build_api:latest
+  commands:
+    - ./scripts/build.sh
