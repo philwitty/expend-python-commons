@@ -1,10 +1,11 @@
-import boto3
+from ex_py_commons import session
+
 
 class Publish:
-    def __init__(self, topic_name, session=None):
-        if session == None:
-            session = boto3.session.Session()
-        self.client =  session.client('sns', region_name='eu-west-1')
+    def __init__(self, topic_name, aws_session=None):
+        if aws_session is None:
+            aws_session = session.boto_session()
+        self.client = session.client('sns', region_name='eu-west-1')
         response = self.client.create_topic(Name=topic_name)
         self.topic_arn = response['TopicArn']
 
@@ -12,10 +13,11 @@ class Publish:
         self.client.publish(TopicArn=self.topic_arn,
                             Message=message_body)
 
+
 class EndpointPush:
-    def __init__(self, application_arn, session=None):
-        if session == None:
-            session = boto3.session.Session()
+    def __init__(self, application_arn, aws_session=None):
+        if aws_session is None:
+            aws_session = session.boto_session()
         self.client = session.client('sns', region_name='eu-west-1')
         self.application = application_arn
 

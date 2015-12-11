@@ -2,6 +2,13 @@ from boto3.session import Session
 from botocore.client import Config
 from urllib.parse import urlparse
 
+
+def concatenate_files_from_urls(urls, **kwargs):
+    session = kwargs.get('aws_session')
+    return b''.join(
+        [read_file_from_url(url, aws_session=session) for url in urls])
+
+
 def read_file_from_url(url, **kwargs):
     session = kwargs.get('aws_session', Session())
     res = urlparse(url)

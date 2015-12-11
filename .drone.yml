@@ -1,4 +1,4 @@
 build:
   image: docker-registry.expend.io/build_api:latest
   commands:
-    - ./scripts/build.sh
+    - make review
