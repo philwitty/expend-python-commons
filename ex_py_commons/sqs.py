@@ -1,11 +1,11 @@
-import boto3
+from ex_py_commons import session
 
 
 class Queue:
-    def __init__(self, queue_name, session=None):
+    def __init__(self, queue_name, aws_session=None):
         if session is None:
-            session = boto3.session.Session()
-        sqs = session.resource('sqs', region_name='eu-west-1')
+            aws_session = session.boto_session()
+        sqs = aws_session.resource('sqs', region_name='eu-west-1')
         self.queue = sqs.get_queue_by_name(QueueName=queue_name)
 
     def receive_message(self):
