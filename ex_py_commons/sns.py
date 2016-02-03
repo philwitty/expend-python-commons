@@ -1,11 +1,9 @@
-from ex_py_commons import session
+from .session import boto_session
 
 
 class Publish:
-    def __init__(self, topic_name, aws_session=None):
-        if aws_session is None:
-            aws_session = session.boto_session()
-        self.client = session.client('sns', region_name='eu-west-1')
+    def __init__(self, topic_name, aws_session=boto_session()):
+        self.client = aws_session.client('sns', region_name='eu-west-1')
         response = self.client.create_topic(Name=topic_name)
         self.topic_arn = response['TopicArn']
 
@@ -15,10 +13,8 @@ class Publish:
 
 
 class EndpointPush:
-    def __init__(self, application_arn, aws_session=None):
-        if aws_session is None:
-            aws_session = session.boto_session()
-        self.client = session.client('sns', region_name='eu-west-1')
+    def __init__(self, application_arn, aws_session=boto_session()):
+        self.client = aws_session.client('sns', region_name='eu-west-1')
         self.application = application_arn
 
     def push_to_endpoint(self, endpoint_token, message_body):
