@@ -1,10 +1,8 @@
-from ex_py_commons import session
+from .session import boto_session
 
 
 class Queue:
-    def __init__(self, queue_name, aws_session=None):
-        if session is None:
-            aws_session = session.boto_session()
+    def __init__(self, queue_name, aws_session=boto_session()):
         sqs = aws_session.resource('sqs', region_name='eu-west-1')
         self.queue = sqs.get_queue_by_name(QueueName=queue_name)
 
