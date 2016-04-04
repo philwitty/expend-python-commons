@@ -1,4 +1,5 @@
 build:
   image: docker-registry.expend.io/build_api:latest
   commands:
+    - . /appenv/bin/activate
     - make review

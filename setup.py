@@ -9,6 +9,6 @@ setup(name='ex_py_commons',
       license='Copyright (c) 2015, Curoo Limited',
       packages=['ex_py_commons'],
       install_requires=[
-        "boto3==1.1.4"
+        "boto3>=1.1.4"
       ],
       zip_safe=False)
