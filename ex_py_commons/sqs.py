@@ -1,23 +1,11 @@
-from .session import boto_session
-
-
 class Queue:
-    def __init__(self, queue_name, aws_session=boto_session()):
-        sqs = aws_session.resource('sqs', region_name='eu-west-1')
-        self.queue = sqs.get_queue_by_name(QueueName=queue_name)
+    def __init__(self, session, queue_name):
+        client = session.resource('sqs', region_name='eu-west-1')
+        self.queue = client.create_queue(QueueName=queue_name)
 
-    def receive_message(self):
-        """
-        Will wait for up to 20 seconds to receive message (Max limit)
-        Returns tuple of (message_handle, message_body)
-        """
-        messages = self.queue.receive_messages(MaxNumberOfMessages=1,
-                                               WaitTimeSeconds=20)
-        if len(messages) != 1:
-            return None
-        else:
-            message = messages[0]
-            return (message.receipt_handle, message.body)
+    def receive_messages(self, num_messages=1):
+        return self.queue.receive_messages(MaxNumberOfMessages=num_messages,
+                                           WaitTimeSeconds=20)
 
     def send_message(self, message_body):
         self.queue.send_message(MessageBody=message_body)
@@ -31,3 +19,31 @@ class Queue:
                 },
             ]
         )
+
+
+class AsyncQueue:
+    def __init__(self, client, queue_url):
+        self.client = client
+        self.queue_url = queue_url
+
+    @staticmethod
+    async def create(session, queue_name):
+        client = session.create_client('sqs', region_name='eu-west-1')
+        queue_url = \
+            await client.create_queue(QueueName=queue_name)['QueueUrl']
+        return AsyncQueue(client, queue_url)
+
+    async def receive_messages(self, num_messages=1):
+        messages = \
+            await self.client.receive_message(QueueUrl=self.queue_url,
+                                              MaxNumberOfMessages=num_messages,
+                                              WaitTimeSeconds=20)
+        return messages.get('Messages', [])
+
+    async def send_message(self, message_body):
+        await self.client.send_message(QueueUrl=self.queue_url,
+                                       MessageBody=message_body)
+
+    async def delete_message(self, message_handle):
+        await self.client.delete_message(QueueUrl=self.queue_url,
+                                         ReceiptHandle=message_handle)
