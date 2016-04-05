@@ -3,3 +3,5 @@ build:
   commands:
     - . /appenv/bin/activate
     - make review
+    - make deps
+    - make test
