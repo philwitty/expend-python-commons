@@ -29,9 +29,8 @@ class AsyncQueue:
     @staticmethod
     async def create(session, queue_name):
         client = session.create_client('sqs', region_name='eu-west-1')
-        queue_url = \
-            await client.create_queue(QueueName=queue_name)['QueueUrl']
-        return AsyncQueue(client, queue_url)
+        queue = await client.create_queue(QueueName=queue_name)
+        return AsyncQueue(client, queue['QueueUrl'])
 
     async def receive_messages(self, num_messages=1):
         messages = \
