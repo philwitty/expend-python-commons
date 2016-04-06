@@ -3,9 +3,9 @@ class Queue:
         client = session.resource('sqs', region_name='eu-west-1')
         self.queue = client.create_queue(QueueName=queue_name)
 
-    def receive_messages(self, num_messages=1):
+    def receive_messages(self, num_messages=1, wait_seconds=20):
         return self.queue.receive_messages(MaxNumberOfMessages=num_messages,
-                                           WaitTimeSeconds=20)
+                                           WaitTimeSeconds=wait_seconds)
 
     def send_message(self, message_body):
         self.queue.send_message(MessageBody=message_body)
@@ -32,11 +32,11 @@ class AsyncQueue:
         queue = await client.create_queue(QueueName=queue_name)
         return AsyncQueue(client, queue['QueueUrl'])
 
-    async def receive_messages(self, num_messages=1):
+    async def receive_messages(self, num_messages=1, wait_seconds=20):
         messages = \
             await self.client.receive_message(QueueUrl=self.queue_url,
                                               MaxNumberOfMessages=num_messages,
-                                              WaitTimeSeconds=20)
+                                              WaitTimeSeconds=wait_seconds)
         return messages.get('Messages', [])
 
     async def send_message(self, message_body):
