@@ -5,10 +5,14 @@ import asyncio
 logger = logging.getLogger(__name__)
 
 
-def add_services_to_loop(loop, session, services):
-    for (queue, handler) in services:
-        service = Service.run(loop, session, queue, handler)
-        loop.create_task(service)
+def run_services(loop, session, services):
+    tasks = [
+        loop.create_task(Service.run(loop, session, queue, handler))
+        for (queue, handler) in services
+    ]
+    if tasks:
+        loop.run_until_complete(asyncio.wait(tasks))
+    log_exceptions_from_tasks(tasks)
 
 
 class Service:
@@ -47,7 +51,8 @@ class Service:
             self._loop.create_task(self._process_message(message))
             for message in messages
         ]
-        await asyncio.wait(tasks)
+        if tasks:
+            await asyncio.wait(tasks)
         log_exceptions_from_tasks(tasks)
 
 
@@ -58,4 +63,4 @@ def log_exceptions_from_tasks(tasks):
             try:
                 raise e
             except Exception:
-                logger.exception("Caught exception in handler")
+                logger.exception("Exception in Task")
