@@ -14,7 +14,9 @@ class TestService(asynctest.TestCase):
         handlers = []
         with patch.object(AsyncQueue, 'create', new=create_mock):
             service = Service.run(self.loop, session, 'test-queue',
-                                  partial(create_handler, handlers),
+                                  handler_cls=partial(
+                                    create_handler, handlers
+                                  ),
                                   run_forever=False)
             # when
             self.loop.run_until_complete(service)
@@ -31,7 +33,9 @@ class TestService(asynctest.TestCase):
         handlers = []
         with patch.object(AsyncQueue, 'create', new=create_mock):
             service = Service.run(self.loop, session, 'test-queue',
-                                  partial(create_handler, handlers),
+                                  handler_cls=partial(
+                                    create_handler, handlers
+                                  ),
                                   run_forever=False)
             # when
             self.loop.run_until_complete(service)
@@ -48,7 +52,9 @@ class TestService(asynctest.TestCase):
         handlers = []
         with patch.object(AsyncQueue, 'create', new=create_mock):
             service = Service.run(self.loop, session, 'test-queue',
-                                  partial(create_handler, handlers),
+                                  handler_cls=partial(
+                                    create_handler, handlers
+                                  ),
                                   run_forever=False)
             # when
             self.loop.run_until_complete(service)
@@ -65,7 +71,9 @@ class TestService(asynctest.TestCase):
         handlers = []
         with patch.object(AsyncQueue, 'create', new=create_mock):
             service = Service.run(self.loop, session, 'test-queue',
-                                  partial(create_handler, handlers),
+                                  handler_cls=partial(
+                                    create_handler, handlers
+                                  ),
                                   run_forever=False)
             # when
             self.loop.run_until_complete(service)
