@@ -1,5 +1,5 @@
 from ex_py_commons.queue_reader import AsyncQueueReader
-from ex_py_commons_lib.asyncio import log_exceptions_from_tasks
+from ex_py_commons.lib.asyncio import log_exceptions_from_tasks
 import asyncio
 
 

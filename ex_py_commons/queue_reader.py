@@ -1,7 +1,7 @@
 import logging
 from ex_py_commons.sqs import AsyncQueue
 import asyncio
-from ex_py_commons_lib.asyncio import log_exceptions_from_tasks
+from ex_py_commons.lib.asyncio import log_exceptions_from_tasks
 
 logger = logging.getLogger(__name__)
 
