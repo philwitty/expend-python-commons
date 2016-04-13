@@ -3,6 +3,7 @@ from ex_py_commons.sqs import AsyncQueue
 from ex_py_commons.sqs_service import Service
 import asynctest
 from functools import partial
+from ex_py_commons.test_lib.mocks import RequestsMock, TestHandler
 
 
 class TestService(asynctest.TestCase):
@@ -14,7 +15,9 @@ class TestService(asynctest.TestCase):
         handlers = []
         with patch.object(AsyncQueue, 'create', new=create_mock):
             service = Service.run(self.loop, session, 'test-queue',
-                                  partial(create_handler, handlers),
+                                  handler_cls=partial(
+                                    create_handler, handlers
+                                  ),
                                   run_forever=False)
             # when
             self.loop.run_until_complete(service)
@@ -31,7 +34,9 @@ class TestService(asynctest.TestCase):
         handlers = []
         with patch.object(AsyncQueue, 'create', new=create_mock):
             service = Service.run(self.loop, session, 'test-queue',
-                                  partial(create_handler, handlers),
+                                  handler_cls=partial(
+                                    create_handler, handlers
+                                  ),
                                   run_forever=False)
             # when
             self.loop.run_until_complete(service)
@@ -48,7 +53,9 @@ class TestService(asynctest.TestCase):
         handlers = []
         with patch.object(AsyncQueue, 'create', new=create_mock):
             service = Service.run(self.loop, session, 'test-queue',
-                                  partial(create_handler, handlers),
+                                  handler_cls=partial(
+                                    create_handler, handlers
+                                  ),
                                   run_forever=False)
             # when
             self.loop.run_until_complete(service)
@@ -65,7 +72,9 @@ class TestService(asynctest.TestCase):
         handlers = []
         with patch.object(AsyncQueue, 'create', new=create_mock):
             service = Service.run(self.loop, session, 'test-queue',
-                                  partial(create_handler, handlers),
+                                  handler_cls=partial(
+                                    create_handler, handlers
+                                  ),
                                   run_forever=False)
             # when
             self.loop.run_until_complete(service)
@@ -92,37 +101,3 @@ def create_handler(handlers):
     handler = Mock(wraps=TestHandler())
     handlers.append(handler)
     return handler
-
-
-class TestHandler():
-    async def handle_request(self, message):
-        if message['Body'] == 'fail':
-            raise Exception
-        return {}
-
-    async def build_action_input(self, message_dict):
-        pass
-
-    async def perform_action(self, action_input):
-        pass
-
-    async def parse_action_response(self, response):
-        return response
-
-    async def handle_response(self, response_dict):
-        pass
-
-
-class RequestsMock(AsyncQueue):
-
-    def __init__(self, messages):
-        self.messages = [
-            {'ReceiptHandle': i, 'Body': message}
-            for i, message in enumerate(messages)
-        ]
-
-    async def receive_messages(self, num_messages=10):
-        return list(self.messages)
-
-    async def delete_message(self, handle):
-        [m for m in self.messages if m['ReceiptHandle'] != handle]
