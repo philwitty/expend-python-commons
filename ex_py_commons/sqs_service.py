@@ -5,7 +5,9 @@ import asyncio
 
 def run_services(loop, session, services):
     tasks = [
-        loop.create_task(Service.run(loop, session, queue, handler))
+        loop.create_task(
+            Service.run(loop, session, queue, handler_cls=handler)
+        )
         for (queue, handler) in services
     ]
     if tasks:
