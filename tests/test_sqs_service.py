@@ -3,13 +3,13 @@ from ex_py_commons.sqs import AsyncQueue
 from ex_py_commons.sqs_service import Service
 import asynctest
 from functools import partial
-from ex_py_commons.test_lib.mocks import RequestsMock, TestHandler
+from ex_py_commons.test_lib.mocks import AsyncRequestsMock, TestHandler
 
 
 class TestService(asynctest.TestCase):
     def test_service_single_request(self):
         # given
-        requests = Mock(wraps=RequestsMock(['']))
+        requests = Mock(wraps=AsyncRequestsMock(['']))
         create_mock = create_requests_mock(requests)
         session = Mock()
         handlers = []
@@ -28,7 +28,7 @@ class TestService(asynctest.TestCase):
 
     def test_service_multiple_request(self):
         # given
-        requests = Mock(wraps=RequestsMock(['', '']))
+        requests = Mock(wraps=AsyncRequestsMock(['', '']))
         create_mock = create_requests_mock(requests)
         session = Mock()
         handlers = []
@@ -47,7 +47,7 @@ class TestService(asynctest.TestCase):
 
     def test_service_failure_request(self):
         # given
-        requests = Mock(wraps=RequestsMock(['fail', '']))
+        requests = Mock(wraps=AsyncRequestsMock(['fail', '']))
         create_mock = create_requests_mock(requests)
         session = Mock()
         handlers = []
@@ -66,7 +66,7 @@ class TestService(asynctest.TestCase):
 
     def test_service_multiple_failure_request(self):
         # given
-        requests = Mock(wraps=RequestsMock(['fail', 'fail']))
+        requests = Mock(wraps=AsyncRequestsMock(['fail', 'fail']))
         create_mock = create_requests_mock(requests)
         session = Mock()
         handlers = []
