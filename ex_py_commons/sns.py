@@ -2,14 +2,30 @@ from .session import boto_session
 
 
 class Publish:
-    def __init__(self, topic_name, aws_session=boto_session()):
-        self.client = aws_session.client('sns', region_name='eu-west-1')
+    def __init__(self, session, topic_name):
+        self.client = session.client('sns', region_name='eu-west-1')
         response = self.client.create_topic(Name=topic_name)
         self.topic_arn = response['TopicArn']
 
     def publish(self, message_body):
         self.client.publish(TopicArn=self.topic_arn,
                             Message=message_body)
+
+
+class AsyncPublish:
+    def __init__(self, client, topic_arn):
+        self.client = client
+        self.topic_arn = topic_arn
+
+    @staticmethod
+    async def create(session, topic_name):
+        client = session.create_client('sns', region_name='eu-west-1')
+        topic = await client.create_topic(Name=topic_name)
+        return AsyncPublish(client, topic['TopicArn'])
+
+    async def publish(self, message_body):
+        await self.client.publish(TopicArn=self.topic_arn,
+                                  Message=message_body)
 
 
 class EndpointPush:

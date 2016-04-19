@@ -2,3 +2,4 @@ git+https://github.com/aio-libs/aiobotocore.git@0.0.4a#egg=aiobotocore
 nose2[coverage-plugin]
 nose2
 asynctest==0.6.0
+boto3==1.3.0
