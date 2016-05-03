@@ -1,4 +1,5 @@
 git+https://github.com/aio-libs/aiobotocore.git@0.0.4a#egg=aiobotocore
+git+https://github.com/curoo/expend-proto.git@38d25d4#egg=ex_pb
 nose2[coverage-plugin]
 nose2
 asynctest==0.6.0
