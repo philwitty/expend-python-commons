@@ -8,6 +8,7 @@ review:
 
 deps:
 	@$(PIP) install --upgrade -r requirements.txt
+	@$(PIP) install --upgrade -r requirements-dev.txt
 .PHONY: deps
 
 test:
